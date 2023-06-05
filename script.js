@@ -148,8 +148,9 @@ async function fetchGif() {
 
 // Share the random GIF
 function shareGif() {
+    const giphyElement = document.getElementById('gifphy');
     // Retrieve the URL of the random GIF
-    const gifUrl = "https://example.com/random-gif.gif";
+    const gifUrl = giphyElement.src;
 
     // Use the Web Share API to share the GIF
     navigator.share({
