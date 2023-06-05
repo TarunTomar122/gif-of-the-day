@@ -5,10 +5,34 @@ window.addEventListener('DOMContentLoaded', function () {
     // Show the loader
     loader.classList.remove('hidden');
 
-    generateFortune();
+
+    // Check if a GIF is already stored in local storage for the current day
+    const storedGif = localStorage.getItem('selectedGif');
+    const currentDate = new Date().toLocaleDateString();
+
+    console.log(currentDate);
+
+    if (storedGif && localStorage.getItem('selectedDate') === currentDate) {
+        // A GIF is already stored for the current day, use the stored GIF
+        // const gifContainer = document.getElementById("gif-container");
+        // gifContainer.innerHTML = `<img src="${storedGif}" alt="Random GIF">`;
+        const giphyElement = document.getElementById('gifphy');
+        giphyElement.src = storedGif
+        var loader = document.getElementById('loader');
+        loader.classList.add('hidden');
+        const shareButton = document.getElementById("share-button");
+        shareButton.disabled = false;
+    } else {
+        // Fetch a new random GIF
+        generateFortune();
+    }
+
 
     // Simulate an asynchronous operation
 });
+
+
+
 
 function generateFortune() {
     // const fortunes = [
@@ -84,7 +108,7 @@ async function fetchGif() {
         "When you remember a funny meme and burst into laughter",
         "When you discover a new funny TV show and binge-watch it",
         "When you finally catch up on sleep and wake up feeling refreshed"
-      ];
+    ];
 
 
     let tag = prompts[Math.floor(Math.random() * prompts.length)]
@@ -108,8 +132,13 @@ async function fetchGif() {
         const shareButton = document.getElementById("share-button");
         shareButton.disabled = false;
 
-        const promptP = document.getElementById("prompt");
-        promptP.innerHTML = tag;
+        // const promptP = document.getElementById("prompt");
+        // promptP.innerHTML = tag;
+
+        const currentDate = new Date().toLocaleDateString();
+        // Store the selected GIF and current date in local storage
+        localStorage.setItem('selectedGif', "https://giphy.com/embed/" + code);
+        localStorage.setItem('selectedDate', currentDate);
 
 
     } catch (error) {
@@ -121,15 +150,15 @@ async function fetchGif() {
 function shareGif() {
     // Retrieve the URL of the random GIF
     const gifUrl = "https://example.com/random-gif.gif";
-  
+
     // Use the Web Share API to share the GIF
     navigator.share({
-      url: gifUrl
+        url: gifUrl
     })
-      .then(() => console.log("GIF shared successfully"))
-      .catch((error) => console.error("Error sharing GIF:", error));
-  }
-  
-  // Event listener for the share button
-  const shareButton = document.getElementById("share-button");
-  shareButton.addEventListener("click", shareGif);
+        .then(() => console.log("GIF shared successfully"))
+        .catch((error) => console.error("Error sharing GIF:", error));
+}
+
+// Event listener for the share button
+const shareButton = document.getElementById("share-button");
+shareButton.addEventListener("click", shareGif);
